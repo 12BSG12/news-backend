@@ -5,12 +5,4 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
-
-  getUsers(): string {
-    return 'all users';
-  }
-
-  getUser(id: number): string {
-    return 'User ' + id;
-  }
 }
