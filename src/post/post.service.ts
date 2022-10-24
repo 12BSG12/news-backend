@@ -1,18 +1,18 @@
+import { PostEntity } from './entities/post.entity';
 import { Injectable } from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserEntity } from './entities/user.entity';
 
 @Injectable()
-export class UserService {
+export class PostService {
   constructor(
-    @InjectRepository(UserEntity)
-    private repository: Repository<UserEntity>,
+    @InjectRepository(PostEntity)
+    private repository: Repository<PostEntity>,
   ) {}
 
-  create(dto: CreateUserDto) {
+  create(dto: CreatePostDto) {
     return this.repository.save(dto);
   }
 
@@ -24,8 +24,8 @@ export class UserService {
     return this.repository.findOne({where: {id}});
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.repository.update(id, updateUserDto);
+  update(id: number, updatePostDto: UpdatePostDto) {
+    return this.repository.update(id, updatePostDto);
   }
 
   remove(id: number) {
