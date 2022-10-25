@@ -1,5 +1,6 @@
+import { findInfo } from './../util/helper';
 import { PostEntity } from './entities/post.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,15 +21,26 @@ export class PostService {
     return this.repository.find();
   }
 
-  findOne(id: number) {
-    return this.repository.findOne({where: {id}});
+  async findOne(id: number) {
+    return findInfo(
+      await this.repository.findOne({ where: { id } }),
+      'Статья не найдена',
+    );
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto) {
+    findInfo(
+      await this.repository.findOne({ where: { id } }),
+      'Статья не найдена',
+    );
     return this.repository.update(id, updatePostDto);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    findInfo(
+      await this.repository.findOne({ where: { id } }),
+      'Статья не найдена',
+    );
     return this.repository.delete(id);
   }
 }

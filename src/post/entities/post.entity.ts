@@ -1,17 +1,28 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('posts')
 export class PostEntity {
   @PrimaryGeneratedColumn()
-  id: number; 
+  id: number;
 
   @Column()
   title: string;
 
   @Column()
-  body: string
+  body: string;
 
   @Column({ nullable: true })
   tags: string;
 
+  @CreateDateColumn({ type: 'timestamp' })
+  createAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updateAt: Date;
 }
