@@ -1,7 +1,8 @@
+import { LoginUserDto } from './dto/login-user.dto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { findInfo } from 'src/util/helper';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -21,11 +22,15 @@ export class UserService {
     return this.repository.find();
   }
 
-  async findOne(id: number) {
+  async findById(id: number) {
     return findInfo(
       await this.repository.findOne({ where: { id } }),
       'Пользователь не найден',
     );
+  }
+
+  async findByCond(cond: LoginUserDto) {
+    return this.repository.findOne({ where: { ...cond } })
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

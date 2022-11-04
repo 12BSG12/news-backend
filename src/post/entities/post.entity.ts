@@ -17,8 +17,11 @@ export class PostEntity {
   @Column()
   body: string;
 
+  @Column({ default: 0 })
+  views: number;
+
   @Column({ nullable: true })
-  tags: string;
+  tags?: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createAt: Date;
