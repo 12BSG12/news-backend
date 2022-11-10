@@ -1,3 +1,4 @@
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtStrategy } from './strategys/jwt.strategy';
 import { LocalStrategy } from './strategys/local.strategy';
 import { UserModule } from './../user/user.module';

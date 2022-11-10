@@ -1,5 +1,5 @@
 import { LoginUserDto } from './dto/login-user.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { findInfo } from 'src/util/helper';
 import { FindOneOptions, Repository } from 'typeorm';
