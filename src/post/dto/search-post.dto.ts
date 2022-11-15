@@ -1,5 +1,3 @@
-
-
 export class SearchPostDto {
   title?: string;
   body?: string;

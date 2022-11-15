@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
     
     if (!user){
-      throw new UnauthorizedException('Нет доступа к этой странице');
+      throw new UnauthorizedException('У вас нет доступа к этой странице');
     } 
     
     return { id: payload.sub, email: payload.email };

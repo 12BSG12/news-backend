@@ -6,6 +6,8 @@ import { FindOneOptions, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
+import { SearchPostDto } from 'src/post/dto/search-post.dto';
+import { SearchUsersDto } from './dto/search-user.dto';
 
 @Injectable()
 export class UserService {
@@ -18,8 +20,51 @@ export class UserService {
     return this.repository.save(dto);
   }
 
-  findAll() {
-    return this.repository.find();
+  async findAll(dto: SearchUsersDto) {
+    const qb = this.repository.createQueryBuilder();
+
+    qb.limit(dto.limit || 0);
+    qb.take(dto.take || 10);
+    qb.orderBy('id', "DESC")
+    
+    const [items, totalCount] = await qb.getManyAndCount();
+
+    return {
+      items,
+      totalCount,
+    };
+  }
+
+  async search(dto: SearchUsersDto) {
+    const qb = this.repository.createQueryBuilder('p');
+
+    qb.limit(dto.limit || 0);
+    qb.take(dto.take || 10);
+
+    qb.setParameters({
+      fullName: `%${dto.fullName}%`,
+      email: `%${dto.email}%`,
+      id: dto.id || '',
+    });
+
+    if (dto.id) {
+      qb.orderBy('id', dto.id);
+    }
+
+    if (dto.fullName) {
+      qb.andWhere(`p.fullName ILIKE :fullName`);
+    }
+
+    if (dto.email) {
+      qb.andWhere(`p.email ILIKE :email`);
+    }
+    
+    const [items, totalCount] = await qb.getManyAndCount();
+
+    return {
+      items,
+      totalCount,
+    };
   }
 
   async findById(id: number) {
@@ -30,7 +75,7 @@ export class UserService {
   }
 
   async findByCond(cond: LoginUserDto) {
-    return this.repository.findOne({ where: { ...cond } })
+    return this.repository.findOne({ where: { ...cond } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
