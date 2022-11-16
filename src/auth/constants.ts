@@ -1,3 +1,3 @@
 export const jwtConstants = {
-  secret: 'test',
+  secret: require('crypto').randomBytes(256).toString('base64'),
 };

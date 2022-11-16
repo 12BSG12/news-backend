@@ -20,8 +20,17 @@ export class CommentService {
     });
   }
 
-  findAll() {
-    return this.repository.find();
+  async findAll() {
+    const qb = this.repository.createQueryBuilder();
+
+    qb.limit(10);
+
+    const [items, totalCount] = await qb.getManyAndCount();
+
+    return {
+      items,
+      totalCount,
+    };
   }
 
   async findOne(id: number) {

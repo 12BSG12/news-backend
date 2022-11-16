@@ -18,12 +18,17 @@ export class PostService {
     return this.repository.save(dto);
   }
 
-  findAll() {
-    return this.repository.find({
-      order: {
-        createAt: 'DESC',
-      },
-    });
+  async findAll() {
+    const qb = this.repository.createQueryBuilder();
+
+    qb.limit(10);
+
+    const [items, totalCount] = await qb.getManyAndCount();
+
+    return {
+      items,
+      totalCount,
+    };
   }
 
   async popular() {
