@@ -28,7 +28,7 @@ export class AuthService {
 
     return {
       ...data,
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
     };
   }
 
@@ -40,7 +40,11 @@ export class AuthService {
 
   async register(dto: CreateUserDto) {
     try {
-      const { password, ...user } = await this.userService.create(dto);
+      const { password, ...user } = await this.userService.create({
+        fullName: dto.fullName,
+        email: dto.email,
+        password: dto.password
+      });
 
       return this.makeJwtData(user);
     } catch (error) {
