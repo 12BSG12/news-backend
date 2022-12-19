@@ -1,7 +1,11 @@
+import { Order } from './../../pagination/type';
+import { ArgsType, Field, Int } from "@nestjs/graphql";
+
+@ArgsType()
 export class SearchUsersDto {
-  fullName: string;
-  email: string;
-  id?: 'DESC' | 'ASC';
-  limit?: number;
-  take?: number;
+  @Field({ nullable: true })
+  fullName?: string;
+
+  @Field({ nullable: true })
+  email?: string;
 }

@@ -1,0 +1,39 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @upper on FIELD_DEFINITION
+
+"""recipe """
+type PageMetaDto {
+  page: Float!
+  take: Float!
+  itemCount: Float!
+  pageCount: Float!
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+"""recipe """
+type UserEntity {
+  id: ID!
+  fullName: String!
+  email: String!
+  password: String
+  createAt: Date!
+  updateAt: Date!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Query {
+  getAllUsers(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0): [UserEntity!]!
+  getPageInfo(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0): PageMetaDto!
+  findOne(id: Int!): UserEntity!
+  getSearchUsers(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0, fullName: String, email: String): [UserEntity!]!
+}
+
+type Mutation {
+  removeUser(id: Int!): Float!
+}
