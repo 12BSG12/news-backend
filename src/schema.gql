@@ -24,16 +24,25 @@ type UserEntity {
   updateAt: Date!
 }
 
+type RegAndLoginResponse {
+  id: Int!
+  email: String!
+  token: String!
+}
+
 """Date custom scalar type"""
 scalar Date
 
 type Query {
   getAllUsers(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0): [UserEntity!]!
   getPageInfo(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0): PageMetaDto!
-  findOne(id: Int!): UserEntity!
+  getUserById(id: Int!): UserEntity!
   getSearchUsers(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0, fullName: String, email: String): [UserEntity!]!
+  getProfile: UserEntity!
 }
 
 type Mutation {
-  removeUser(id: Int!): Float!
+  removeUser(id: Int!): Int!
+  login(email: String!, password: String!): RegAndLoginResponse!
+  register(fullName: String!, email: String!, password: String): RegAndLoginResponse!
 }

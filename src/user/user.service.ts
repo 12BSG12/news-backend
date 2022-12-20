@@ -77,7 +77,7 @@ export class UserService {
   }
 
   async findByCond(cond: LoginUserDto) {
-    return this.repository.findOne({ where: { ...cond } });
+    return await this.repository.findOne({ where: { ...cond } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

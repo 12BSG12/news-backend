@@ -1,3 +1,4 @@
+import { CurrentUser } from './../util/helper';
 import { PageMetaDto } from '../pagination/pageMeta.dto';
 import { PageMetaDtoParameters } from '../pagination/type';
 import { UserModule } from './user.module';
@@ -42,7 +43,7 @@ import { Resolver, Query, Args, Int, Mutation } from '@nestjs/graphql';
 @Resolver('user')
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
-
+  
   @Query(() => [UserEntity])
   async getAllUsers(@Args() pageOptionsDto: PageOptionsDto) {
     return await this.userService.findAll(pageOptionsDto);
@@ -54,7 +55,7 @@ export class UserResolver {
   }
 
   @Query(() => UserEntity)
-  async findOne(@Args('id', { type: () => Int }) id: number) {
+  async getUserById(@Args('id', { type: () => Int }) id: number) {
     return await this.userService.findById(id);
   }
 
@@ -66,8 +67,14 @@ export class UserResolver {
     return this.userService.search(pageOptionsDto, dto);
   }
 
-  @Mutation(() => Number)
+  @Mutation(() => Int)
   async removeUser(@Args('id', { type: () => Int }) id: number) {
     return await this.userService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Query(() => UserEntity)
+  async getProfile(@CurrentUser() user: UserEntity) {
+    return user.id;
   }
 }

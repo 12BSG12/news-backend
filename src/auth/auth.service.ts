@@ -1,3 +1,5 @@
+import { LoginUserDto } from './../user/dto/login-user.dto';
+import { LoginInput } from './dto/inputLogin.dto';
 import { CreateUserDto } from './../user/dto/create-user.dto';
 import { UserEntity } from './../user/entities/user.entity';
 import { ForbiddenException, Injectable } from '@nestjs/common';
@@ -11,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string) {
     const user = await this.userService.findByCond({
       email,
       password,
@@ -32,10 +34,9 @@ export class AuthService {
     };
   }
 
-  async login(user: UserEntity) {
-    const { password, ...userData } = user;
-
-    return this.makeJwtData(userData);
+  async login(LoginInput: LoginInput) {
+    const user = await this.userService.findByCond(LoginInput);
+    return this.makeJwtData(user);
   }
 
   async register(dto: CreateUserDto) {

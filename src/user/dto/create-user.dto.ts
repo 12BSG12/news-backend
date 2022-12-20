@@ -1,7 +1,7 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { ArgsType, Field } from '@nestjs/graphql';
 import { IsEmail, Length } from 'class-validator';
 
-@InputType()
+@ArgsType()
 export class CreateUserDto {
   @Field()
   @Length(2, 32, { message: 'Минимальная длина имени 2 символа' })
