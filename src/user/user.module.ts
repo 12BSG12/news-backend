@@ -1,4 +1,3 @@
-import { DateScalar } from './../common/scalars/date.scalar';
 import { PageMetaDto } from '../pagination/pageMeta.dto';
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -8,7 +7,7 @@ import { UserEntity } from './entities/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
-  providers: [UserService, UserResolver, DateScalar],
+  providers: [UserService, UserResolver],
   exports: [UserService],
 })
 export class UserModule {}

@@ -1,9 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config/dist';
 import { isDev } from './util/helper';
-import { PostEntity } from './post/entities/post.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
@@ -51,9 +49,10 @@ import { upperDirectiveTransformer } from './common/directives/upper-case.direct
       }),
     }),
     UserModule,
-
     PostModule,
+
     CommentModule,
+    
     AuthModule,
   ],
 })

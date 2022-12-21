@@ -85,7 +85,9 @@ export class UserService {
       await this.repository.findOne({ where: { id } }),
       'Пользователь не найден',
     );
-    return this.repository.update(id, updateUserDto);
+    await this.repository.update(id, updateUserDto);
+    
+    return await this.repository.findOne({ where: { id } })
   }
 
   async remove(id: number) {

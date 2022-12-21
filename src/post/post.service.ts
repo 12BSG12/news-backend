@@ -1,3 +1,4 @@
+import { PageOptionsDto } from './../pagination/pageOptions.dto';
 import { findInfo } from './../util/helper';
 import { PostEntity } from './entities/post.entity';
 import { Injectable } from '@nestjs/common';
@@ -18,68 +19,68 @@ export class PostService {
     return this.repository.save(dto);
   }
 
-  async findAll() {
-    const qb = this.repository.createQueryBuilder();
+  async findAll(pageOptionsDto: PageOptionsDto) {
+    const qb = this.repository.createQueryBuilder('posts');
 
-    qb.limit(10);
+    if (pageOptionsDto.order) {
+      qb.orderBy('id', pageOptionsDto.order);
+    }
+    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
 
-    const [items, totalCount] = await qb.getManyAndCount();
+    const { entities } = await qb.getRawAndEntities();
 
-    return {
-      items,
-      totalCount,
-    };
+    return entities;
   }
 
-  async popular() {
-    const qb = this.repository.createQueryBuilder();
+  async popular(pageOptionsDto: PageOptionsDto) {
+    const qb = this.repository.createQueryBuilder('popPosts');
 
-    qb.orderBy('views', 'DESC');
-    qb.limit(10);
+    if (pageOptionsDto.order) {
+      qb.orderBy('views', pageOptionsDto.order);
+    }
 
-    const [items, totalCount] = await qb.getManyAndCount();
+    qb.where(`popPosts.views >= 10`);
 
-    return {
-      items,
-      totalCount,
-    };
+
+    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+
+    const { entities } = await qb.getRawAndEntities();
+
+    return entities;
   }
 
-  async search(dto: SearchPostDto) {
-    const qb = this.repository.createQueryBuilder('p');
+  async search(pageOptionsDto: PageOptionsDto, dto: SearchPostDto) {
+    const qb = this.repository.createQueryBuilder('sPosts');
 
-    qb.limit(dto.limit || 0);
-    qb.take(dto.take || 10);
+    if (pageOptionsDto.order) {
+      qb.orderBy('views', pageOptionsDto.order);
+    }
+    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+    
 
     qb.setParameters({
       title: `%${dto.title}%`,
       body: `%${dto.body}%`,
       tag: `%${dto.tag}%`,
-      views: dto.views || '',
+      views: pageOptionsDto.order || '',
     });
 
-    if (dto.views) {
-      qb.orderBy('views', dto.views);
-    }
 
     if (dto.body) {
-      qb.andWhere(`p.body ILIKE :body`);
+      qb.andWhere(`sPosts.body ILIKE :body`);
     }
 
     if (dto.title) {
-      qb.andWhere(`p.title ILIKE :title`);
+      qb.andWhere(`sPosts.title ILIKE :title`);
     }
 
     if (dto.tag) {
-      qb.andWhere(`p.tag ILIKE :tag`);
+      qb.andWhere(`sPosts.tag ILIKE :tag`);
     }
+    
+    const { entities } = await qb.getRawAndEntities();
 
-    const [items, totalCount] = await qb.getManyAndCount();
-
-    return {
-      items,
-      totalCount,
-    };
+    return entities;
   }
 
   async findOne(id: number) {
