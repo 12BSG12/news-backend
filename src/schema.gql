@@ -40,6 +40,16 @@ type PostEntity {
   updateAt: DateTime!
 }
 
+"""recipe """
+type CommentEntity {
+  id: ID!
+  text: String!
+  user: UserEntity!
+  post: PostEntity!
+  createAt: DateTime!
+  updateAt: DateTime!
+}
+
 type RegAndLoginResponse {
   id: Int!
   email: String!
@@ -54,12 +64,20 @@ type Query {
   getMyProfile: UserEntity!
   getAllPosts(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0): [PostEntity!]!
   getPopularPost(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0): [PostEntity!]!
+  getPostById(id: ID!): PostEntity!
   getSearchPost(order: String = "ASC", page: Int = 1, take: Int = 10, skip: Int = 0, title: String, body: String, tag: String): [PostEntity!]!
+  getAllComments(postId: ID): [CommentEntity!]!
+  findOne(id: ID!): CommentEntity!
 }
 
 type Mutation {
   removeUser(id: Int!): Int!
-  update(fullName: String!, email: String!, password: String): UserEntity!
+  updateUser(fullName: String!, email: String!, password: String): UserEntity!
+  createPost(title: String!, body: String!, views: Int, tags: String): PostEntity!
+  updatePost(id: ID!, text: String!, postId: ID!): CommentEntity!
+  removePost(id: ID!): ID!
+  createComment(text: String!, postId: ID!): CommentEntity!
+  removeComment(id: ID!): ID!
   login(email: String!, password: String!): RegAndLoginResponse!
   register(fullName: String!, email: String!, password: String): RegAndLoginResponse!
 }

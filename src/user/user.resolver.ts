@@ -1,5 +1,4 @@
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
 import { CurrentUser } from './../util/helper';
 import { PageMetaDto } from '../pagination/pageMeta.dto';
 import { PageOptionsDto } from '../pagination/pageOptions.dto';
@@ -50,7 +49,7 @@ export class UserResolver {
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => UserEntity)
-  async update(
+  async updateUser(
     @CurrentUser() user: UserEntity,
     @Args() UpdateUserDto: UpdateUserDto,
   ) {

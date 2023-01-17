@@ -12,25 +12,33 @@ export class CommentService {
     @InjectRepository(CommentEntity)
     private repository: Repository<CommentEntity>,
   ) {}
-  create(dto: CreateCommentDto) {
+  create(dto: CreateCommentDto, userId: number) {
     return this.repository.save({
       text: dto.text,
       post: { id: dto.postId },
-      user: { id: 2}
+      user: { id: userId },
     });
   }
 
-  async findAll() {
-    const qb = this.repository.createQueryBuilder();
+  async findAll(postId: number) {
+    const qb = this.repository.createQueryBuilder('c');
 
-    qb.limit(10);
+    if (postId) {
+      qb.where('c.postId = :postId', { postId });
+    }
 
-    const [items, totalCount] = await qb.getManyAndCount();
+    const arr = await qb
+      .leftJoinAndSelect('c.post', 'post')
+      .leftJoinAndSelect('c.user', 'user')
+      .getMany();
 
-    return {
-      items,
-      totalCount,
-    };
+    return arr.map((obj) => {
+      return {
+        ...obj,
+        post: { id: obj.post.id, title: obj.post.title },
+      };
+    });
+
   }
 
   async findOne(id: number) {
@@ -53,6 +61,7 @@ export class CommentService {
       await this.repository.findOne({ where: { id } }),
       'Комментарий не найден',
     );
-    return this.repository.delete(id);
+    await this.repository.delete(id);
+    return id;
   }
 }

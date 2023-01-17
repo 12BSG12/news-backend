@@ -1,4 +1,5 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { ArgsType } from '@nestjs/graphql';
 import { CreateCommentDto } from './create-comment.dto';
 
-export class UpdateCommentDto extends PartialType(CreateCommentDto) {}
+@ArgsType()
+export class UpdateCommentDto extends CreateCommentDto {}

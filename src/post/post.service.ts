@@ -41,7 +41,6 @@ export class PostService {
 
     qb.where(`popPosts.views >= 10`);
 
-
     qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
 
     const { entities } = await qb.getRawAndEntities();
@@ -56,7 +55,6 @@ export class PostService {
       qb.orderBy('views', pageOptionsDto.order);
     }
     qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
-    
 
     qb.setParameters({
       title: `%${dto.title}%`,
@@ -64,7 +62,6 @@ export class PostService {
       tag: `%${dto.tag}%`,
       views: pageOptionsDto.order || '',
     });
-
 
     if (dto.body) {
       qb.andWhere(`sPosts.body ILIKE :body`);
@@ -77,7 +74,7 @@ export class PostService {
     if (dto.tag) {
       qb.andWhere(`sPosts.tag ILIKE :tag`);
     }
-    
+
     const { entities } = await qb.getRawAndEntities();
 
     return entities;
@@ -102,7 +99,9 @@ export class PostService {
       await this.repository.findOne({ where: { id } }),
       'Статья не найдена',
     );
-    return this.repository.update(id, updatePostDto);
+    await this.repository.update(id, updatePostDto);
+
+    return await this.repository.findOne({ where: { id } });
   }
 
   async remove(id: number) {
@@ -110,6 +109,7 @@ export class PostService {
       await this.repository.findOne({ where: { id } }),
       'Статья не найдена',
     );
-    return this.repository.delete(id);
+    await this.repository.delete(id);
+    return id;
   }
 }

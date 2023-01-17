@@ -50,9 +50,7 @@ import { upperDirectiveTransformer } from './common/directives/upper-case.direct
     }),
     UserModule,
     PostModule,
-
     CommentModule,
-    
     AuthModule,
   ],
 })

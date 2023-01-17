@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { ArgsType } from '@nestjs/graphql';
 import { CreatePostDto } from './create-post.dto';
-
-export class UpdatePostDto extends PartialType(CreatePostDto) {}
+@ArgsType()
+export class UpdatePostDto extends CreatePostDto {}

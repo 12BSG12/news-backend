@@ -95,7 +95,7 @@ export class UserService {
       await this.repository.findOne({ where: { id } }),
       'Пользователь не найден',
     );
-    this.repository.delete({ id });
+    await this.repository.delete({ id });
     return id;
   }
 }
