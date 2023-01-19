@@ -7,10 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = await app.get(ConfigService)
   const port = +config.get('API_PORT');
+  const host = config.get('API_HOST');
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(port || 3000, () => {
     console.log('start on port: ' + port);
   });
-  console.log(`Application is running on: http://localhost:${port}/graphql`);
+  console.log(`Application is running on: ${host + port}/graphql`);
 }
 bootstrap();
