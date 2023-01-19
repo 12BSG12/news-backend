@@ -28,11 +28,6 @@ import { upperDirectiveTransformer } from './common/directives/upper-case.direct
         ],
       },
     }),
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-    //   sortSchema: true,
-    // }),  
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

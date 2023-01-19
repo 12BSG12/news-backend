@@ -1,5 +1,5 @@
 import { PageOptionsDto } from './../pagination/pageOptions.dto';
-import { findInfo } from './../util/helper';
+import { findInfo, skipPage } from './../util/helper';
 import { PostEntity } from './entities/post.entity';
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -25,7 +25,7 @@ export class PostService {
     if (pageOptionsDto.order) {
       qb.orderBy('id', pageOptionsDto.order);
     }
-    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+    qb.skip(skipPage(pageOptionsDto)).take(pageOptionsDto.take);
 
     const { entities } = await qb.getRawAndEntities();
 
@@ -41,7 +41,7 @@ export class PostService {
 
     qb.where(`popPosts.views >= 10`);
 
-    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+    qb.skip(skipPage(pageOptionsDto)).take(pageOptionsDto.take);
 
     const { entities } = await qb.getRawAndEntities();
 
@@ -54,7 +54,7 @@ export class PostService {
     if (pageOptionsDto.order) {
       qb.orderBy('views', pageOptionsDto.order);
     }
-    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+    qb.skip(skipPage(pageOptionsDto)).take(pageOptionsDto.take);
 
     qb.setParameters({
       title: `%${dto.title}%`,

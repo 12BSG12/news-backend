@@ -6,7 +6,7 @@ import { Order } from './type';
 
 @ArgsType()
 export class PageOptionsDto {
-  @Field( { nullable: true })
+  @Field({ nullable: true })
   @IsEnum(Order)
   @IsOptional()
   readonly order?: Order = Order.ASC;
@@ -25,9 +25,4 @@ export class PageOptionsDto {
   @Max(50)
   @IsOptional()
   readonly take?: number = 10;
-
-  @Field(() => Int, { nullable: true })
-  get skip(): number {
-    return (this.page - 1) * this.take;
-  }
 }

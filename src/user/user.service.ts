@@ -3,12 +3,13 @@ import { PageOptionsDto } from '../pagination/pageOptions.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { findInfo } from 'src/util/helper';
+import { findInfo, skipPage } from 'src/util/helper';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { SearchUsersDto } from './dto/search-user.dto';
+import { CommentEntity } from '../comment/entities/comment.entity';
 
 @Injectable()
 export class UserService {
@@ -25,13 +26,29 @@ export class UserService {
     const qb = this.repository.createQueryBuilder('users');
 
     if (pageOptionsDto.order) {
-      qb.orderBy('id', pageOptionsDto.order);
+      qb.orderBy('users.id', pageOptionsDto.order);
     }
-    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
 
-    const { entities } = await qb.getRawAndEntities();
+    qb.skip(skipPage(pageOptionsDto)).take(pageOptionsDto.take);
 
-    return entities;
+    const arr = await qb
+      .leftJoinAndMapMany(
+        'users.comments',
+        CommentEntity,
+        'comment',
+        'comment.userId = users.id',
+      )
+      .loadRelationCountAndMap(
+        'users.commentsCount',
+        'users.comments',
+        'comments',
+      )
+      .getMany();
+
+    return arr.map((obj) => {
+      delete obj.comments;
+      return obj;
+    });
   }
 
   async pageInfo(pageOptionsDto: PageOptionsDto) {
@@ -48,7 +65,7 @@ export class UserService {
     if (pageOptionsDto.order) {
       qb.orderBy('id', pageOptionsDto.order);
     }
-    qb.skip(pageOptionsDto.skip).take(pageOptionsDto.take);
+    qb.skip(skipPage(pageOptionsDto)).take(pageOptionsDto.take);
 
     qb.setParameters({
       fullName: `%${dto.fullName}%`,
@@ -86,8 +103,8 @@ export class UserService {
       'Пользователь не найден',
     );
     await this.repository.update(id, updateUserDto);
-    
-    return await this.repository.findOne({ where: { id } })
+
+    return await this.repository.findOne({ where: { id } });
   }
 
   async remove(id: number) {

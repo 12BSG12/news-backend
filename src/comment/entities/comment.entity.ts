@@ -22,12 +22,10 @@ export class CommentEntity {
   @Column()
   text: string;
 
-  @Field()
   @ManyToOne(() => UserEntity, {nullable: false})
   @JoinColumn({ name: 'userId' })
   user: UserEntity;
 
-  @Field()
   @ManyToOne(() => PostEntity, {nullable: false})
   @JoinColumn({ name: 'postId' })
   post: PostEntity;

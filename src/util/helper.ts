@@ -1,3 +1,4 @@
+import { PageOptionsDto } from './../pagination/pageOptions.dto';
 import { CommentEntity } from './../comment/entities/comment.entity';
 import { UserEntity } from './../user/entities/user.entity';
 import { NotFoundException } from "@nestjs/common";
@@ -24,3 +25,5 @@ export const CurrentUser = createParamDecorator(
     return ctx.getContext().req.user;
   },
 );
+
+export const skipPage = (pageOptionsDto: PageOptionsDto) => (pageOptionsDto.page - 1) * pageOptionsDto.take;
